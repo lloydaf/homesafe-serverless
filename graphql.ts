@@ -1,21 +1,17 @@
-const { ApolloServer, gql } = require('apollo-server-lambda');
+import { ApolloServer } from 'apollo-server-lambda';
+import { resolvers } from './src/graphql/resolvers';
+import { schema as typeDefs } from './src/graphql/schema';
+import * as AWS from 'aws-sdk';
 
-// Construct a schema, using GraphQL schema language
-const typeDefs = gql`
-  type Query {
-    hello: String
-  }
-`;
-
-// Provide resolver functions for your schema fields
-const resolvers = {
-  Query: {
-    hello: () => 'Hello world!',
-  },
-};
+const database = new AWS.DynamoDB.DocumentClient({
+  region: 'localhost',
+  endpoint: 'http://localhost:8000'
+});
 
 const server = new ApolloServer({
-  typeDefs, resolvers, playground: {
+  typeDefs, resolvers, context: () => ({
+    database
+  }), playground: {
     endpoint: "/dev/api"
   }
 });

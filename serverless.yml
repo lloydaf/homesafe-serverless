@@ -56,7 +56,7 @@ resources: # CloudFormation template syntax
     usersTable:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: usersTable
+        TableName: users
         AttributeDefinitions:
           - AttributeName: username
             AttributeType: S
