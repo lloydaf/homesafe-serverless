@@ -7,7 +7,9 @@
     "start": "nodemon ./node_modules/.bin/serverless offline start"
   },
   "dependencies": {
+    "apollo-server-lambda": "^2.12.0",
     "aws-sdk": "^2.657.0",
+    "graphql": "^15.0.0",
     "source-map-support": "^0.5.10"
   },
   "devDependencies": {
