@@ -9,9 +9,26 @@ custom:
     webpackConfig: ./webpack.config.js
     includeModules: true
 
+  dynamodb:
+  # If you only want to use DynamoDB Local in some stages, declare them here
+    stages:
+      - dev
+    start:
+      port: 8000
+      inMemory: true
+      heapInitial: 200m
+      heapMax: 1g
+      migrate: true
+      seed: true
+      convertEmptyValues: true
+    # Uncomment only if you already have a DynamoDB running locally
+    # noStart: true
+
 # Add the serverless-webpack plugin
 plugins:
   - serverless-webpack
+  - serverless-offline
+  - serverless-dynamodb-local
 
 provider:
   name: aws
@@ -28,3 +45,21 @@ functions:
       - http:
           method: get
           path: hello
+
+resources: # CloudFormation template syntax
+  Resources:
+    usersTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: usersTable
+        AttributeDefinitions:
+          - AttributeName: username
+            AttributeType: S
+            
+        KeySchema:
+          - AttributeName: username
+            KeyType: HASH
+          
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
