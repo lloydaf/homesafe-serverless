@@ -39,19 +39,24 @@ provider:
     AWS_NODEJS_CONNECTION_REUSE_ENABLED: 1
 
 functions:
-  hello:
-    handler: handler.hello
+  graphql:
+    handler: graphql.handler
     events:
-      - http:
-          method: get
-          path: hello
+    - http:
+        path: api
+        method: post
+        cors: true
+    - http:
+        path: api
+        method: get
+        cors: true
 
 resources: # CloudFormation template syntax
   Resources:
     usersTable:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: usersTable
+        TableName: users
         AttributeDefinitions:
           - AttributeName: username
             AttributeType: S
