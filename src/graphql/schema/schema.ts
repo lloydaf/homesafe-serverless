@@ -12,14 +12,21 @@ export const schema = gql`
   }
 
   type Mutation {
-    registerUser(user: UserRegistration!): User!
-    setToken(input: TokenRegistration): User
+    registerUser(user: UserRegistration!): User
+    setToken(input: TokenRegistration!): User
+    login(input: UserLogin!): User
   }
 
   input UserRegistration {
     fullName: String!
-    username: String!
     phoneNumber: String!
+    username: String!
+    password: String!
+  }
+  
+  input UserLogin {
+    username: String!
+    password: String!
   }
 
   input TokenRegistration {
