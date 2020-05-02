@@ -17,9 +17,11 @@ export const userMutations = {
       password: await bcrypt.hash(user.password, 10)
     }
     const database: AWS.DynamoDB.DocumentClient = context.database;
-    await promisify(database.put.bind(database))({
-      TableName: 'users', Item: safeUser
-    });
+    const input: AWS.DynamoDB.DocumentClient.PutItemInput = {
+      TableName: 'users', Item: safeUser,
+      ConditionExpression: 'attribute_not_exists(username)'
+    }
+    await promisify(database.put.bind(database))(input);
     return user;
   },
 
