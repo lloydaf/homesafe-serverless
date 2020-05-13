@@ -46,5 +46,20 @@ export const userMutations = {
     if (!data.Item) return null;
     const result = await bcrypt.compare(password, data.Item.password);
     return result ? (data && data.Item) : (null);
+  }, 
+
+  async sendNotification(_: any, { input: notificationArray}: {input: any[]}, context: { database: AWS.DynamoDB.DocumentClient; }, __: any) {
+    const database: AWS.DynamoDB.DocumentClient = context.database;
+    console.log(notificationArray);
+    const data = await promisify(database.batchGet.bind(database))({
+      RequestItems: {
+        'users': {
+          Keys: notificationArray.map(({username}) => ({username}))
+        }
+      }
+    })
+    console.log('data is', data);
+    // call the API here!!!
+    return 'Success';
   }
 }
