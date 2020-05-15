@@ -15,7 +15,7 @@ export const schema = gql`
     registerUser(user: UserRegistration!): User
     setToken(input: TokenRegistration!): User
     login(input: UserLogin!): User
-    sendNotification(input: [Notification]!): String
+    sendNotification(input: Notification!): String
   }
 
   input UserRegistration {
@@ -36,7 +36,7 @@ export const schema = gql`
   }
   
   input Notification {
-    username: String!
+    recipientList: [String]!
     title: String!
     body: String!
   }
