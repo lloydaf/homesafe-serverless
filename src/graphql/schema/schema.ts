@@ -15,6 +15,7 @@ export const schema = gql`
     registerUser(user: UserRegistration!): User
     setToken(input: TokenRegistration!): User
     login(input: UserLogin!): User
+    sendNotification(input: Notification!): String
   }
 
   input UserRegistration {
@@ -32,5 +33,11 @@ export const schema = gql`
   input TokenRegistration {
     expoToken: String!
     username: String!
+  }
+  
+  input Notification {
+    recipientList: [String]!
+    title: String!
+    body: String!
   }
 `;

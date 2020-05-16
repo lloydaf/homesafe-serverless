@@ -46,5 +46,24 @@ export const userMutations = {
     if (!data.Item) return null;
     const result = await bcrypt.compare(password, data.Item.password);
     return result ? (data && data.Item) : (null);
+  },
+
+  async sendNotification(_: any, { input: { recipientList, title, body } }: { input: { recipientList: string[], title: string, body: string } }, context: { database: AWS.DynamoDB.DocumentClient; }, __: any) {
+    const database: AWS.DynamoDB.DocumentClient = context.database;
+    const data = await promisify(database.batchGet.bind(database))({
+      RequestItems: {
+        'users': {
+          Keys: recipientList.map(recepient => ({ username: recepient }))
+        }
+      }
+    })
+
+    const axios = require('axios');
+    const message = data.Responses.users.map((item) => {
+      return { data: { data: 'goes here' }, _displayInForeground: true, to: item.expoToken, sound: 'default', title, body }
+    });
+
+    await axios.post('https://exp.host/--/api/v2/push/send', message);
+    return 'Success';
   }
 }
